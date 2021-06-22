@@ -11,28 +11,14 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(skimr)
 library(lubridate)
+library(knitr)
 ```
 
-```{r, include = FALSE}
-birthdates <- read_csv("birthdates.csv",
-                       col_types = cols(value = col_character()))
+```{r birth-plot, include = FALSE}
+birth_plot <- read_rds("birth-plot.rds")
+ggsave("birth-plot.png", plot = birth_plot)
 ```
 
-```{r, echo = FALSE}
-birthdates %>%
-  mutate(birth_date = str_sub(value, 2, 11)) %>%
-  mutate(birth_date = parse_date(birth_date)) %>%
-  mutate(month = month(birth_date)) %>%
-  group_by(month) %>%
-  summarize(total = n()) %>%
-  ggplot(mapping = aes(x = month, y = total)) +
-    geom_col() +
-    scale_x_continuous(breaks = 1:12) +
-    theme_classic() +
-    labs(title = "Birth Months of UEFA Euro 2020 Soccer Players",
-         subtitle = "Most of the UEFA Euro 2020 soccer players are born in March",
-         x = "Month",
-         y = "Number of Players",
-         caption = "Wikipedia")
-  
+```{r image, echo = FALSE}
+include_graphics("birth-plot.png")
 ```
